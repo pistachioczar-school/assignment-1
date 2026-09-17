@@ -28,4 +28,16 @@ package eventTicketStudent;
 
 public class TicketBook {
 
+	private Ticket[] tickets;
+	private int count;
+	
+	public TicketBook(int size) {
+		
+		if(size < 1) {
+			throw new IllegalArgumentException("Invalid book size. Please insert a positive integer for book size.");
+		}
+		this.tickets = new Ticket[size];
+		int count = 0;
+
+	}
 }
