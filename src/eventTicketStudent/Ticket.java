@@ -31,6 +31,96 @@ them consistently.
 package eventTicketStudent;
 
 public class Ticket {
+    private final int id;
+    private final Event event;
+    private final TicketType ticketType;
+    private final String studentName;
+    private boolean canceled; // I spelled canceled like in the assignemtnt to be safe
+    private boolean admitted;
 
+    public Ticket(int id, Event event, TicketType ticketType, String studentName, boolean canceled, boolean admitted) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Id cannot be less than or equal to 0");
+        }
 
+        if (event == null) {
+            throw new IllegalArgumentException("Event cannot be null");
+        }
+
+        if (ticketType == null) {
+            throw new IllegalArgumentException("Ticket type cannot be null");
+        }
+
+        if (studentName == null || studentName.isBlank()) {
+            throw new IllegalArgumentException("Student name cannot be null or blank");
+        }
+
+        if (canceled && admitted) {
+            throw new IllegalArgumentException("Ticket cannot be cancelled and admitted at the same time");
+        }
+
+        this.id = id;
+        this.event = event;
+        this.ticketType = ticketType;
+        this.studentName = studentName;
+        this.canceled = canceled;
+        this.admitted = admitted;
+    }
+
+    // This method's behavior could definitely be different depending on how you want things to behave
+    // I am using a boolean right now where basically it returns false if the ticket is admitted and returns true otherwise after setting cancelled to true
+    // You could alternatively throw if admitted and then catch it in the caller, but that would require coordination between us
+    public synchronized boolean cancel() {
+        if (admitted) {
+            return false;
+        } else {
+            if (canceled) {
+                // I am choosing to make cancel idempotent for now so I will still return true instead of throwing or returning false
+                return true;
+            }
+
+            canceled = true;
+
+            return true;
+        }
+    }
+
+    // Same thing as cancel() but with the variables swapped
+    public synchronized boolean admit() {
+        if (canceled) {
+            return false;
+        } else {
+            if (admitted) {
+                // admit is also idempotent for now
+                return true;
+            }
+
+            admitted = true;
+
+            return true;
+        }
+    }
+
+    public synchronized boolean isCanceled() {
+        return canceled;
+    }
+
+    public synchronized boolean isAdmitted() {
+        return admitted;
+    }
+
+    @Override
+    public synchronized String toString() {
+        return "Ticket description: (id) '" + id + "'; (event) '" + event + "'; (ticket type) '" + ticketType + "'; (student name) '" + studentName + "'; (status) '" + getStatusString() + "'";
+    }
+
+    private String getStatusString() {
+        if (canceled) {
+            return "canceled";
+        } else if (admitted) {
+            return "admitted";
+        } else {
+            return "neither canceled nor admitted";
+        }
+    }
 }
