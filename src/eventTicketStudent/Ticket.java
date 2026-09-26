@@ -38,7 +38,7 @@ public class Ticket {
     private boolean canceled; // I spelled canceled like in the assignemtnt to be safe
     private boolean admitted;
 
-    public Ticket(int id, Event event, TicketType ticketType, String studentName, boolean canceled, boolean admitted) {
+    public Ticket(int id, Event event, TicketType ticketType, String studentName) {
         if (id <= 0) {
             throw new IllegalArgumentException("Id cannot be less than or equal to 0");
         }
@@ -63,8 +63,8 @@ public class Ticket {
         this.event = event;
         this.ticketType = ticketType;
         this.studentName = studentName;
-        this.canceled = canceled;
-        this.admitted = admitted;
+        this.canceled = false;
+        this.admitted = false;
     }
 
     // This method's behavior could definitely be different depending on how you want things to behave
@@ -72,7 +72,9 @@ public class Ticket {
     // You could alternatively throw if admitted and then catch it in the caller, but that would require coordination between us
     public synchronized boolean cancel() {
         if (admitted) {
-            return false;
+        	//Zach adding a throw statement and will add try catch statement to ticket manager just to show that we know how to handle error handling for assignment.
+        	throw new IllegalArgumentException("Cannot cancel an admitted ticket");
+        
         } else {
             if (canceled) {
                 // I am choosing to make cancel idempotent for now so I will still return true instead of throwing or returning false
@@ -122,5 +124,17 @@ public class Ticket {
         } else {
             return "neither canceled nor admitted";
         }
+    }
+    
+    //Zach addition so you can check for repeating ids
+    
+    public int getId() {
+    	return this.id;
+    }
+    
+    //Zach addition that lets you get the tickets event ID
+    
+    public Event getEvent() {
+    	return this.event;
     }
 }

@@ -37,7 +37,56 @@ public class TicketBook {
 			throw new IllegalArgumentException("Invalid book size. Please insert a positive integer for book size.");
 		}
 		this.tickets = new Ticket[size];
-		int count = 0;
-
+		this.count = 0;
+		
 	}
+	
+	public int createTicket(int id, Event event, TicketType type, String studentName){
+		
+		for(int i = 0; i < this.count; i++) {
+			if(this.tickets[i].getId() == id) {
+				throw new IllegalArgumentException("Ticket ID is already in ticket book. Please input a unique id.");
+			}
+		}
+		
+		if(this.count >= this.tickets.length) {
+			throw new IllegalArgumentException("Ticketbook is full, cannot implement any new tickets.");
+		}
+		
+		Ticket newTicket = new Ticket(id, event, type, studentName);
+		this.tickets[this.count] = newTicket;
+		this.count += 1;
+		return newTicket.getId();
+		
+	}
+	
+	public Ticket findById(int id) {
+		
+		for(int i=0; i < this.count; i++) {
+			if(this.tickets[i].getId() == id) {
+				return this.tickets[i];
+			}
+		}
+		
+		return null;
+	}
+	
+	public void printAll() {
+		for(int i=0; i < this.count; i++) {
+			System.out.println(this.tickets[i].toString());
+		}
+	}
+	
+	public void printForEvent(Event event) {
+		for(int i=0; i < this.count; i++) {
+			if(this.tickets[i].getEvent().getName() == event.getName() && this.tickets[i].getEvent().getLocation() == event.getLocation()) {
+				System.out.println(this.tickets[i].toString() + "\n");
+				return;
+			}
+		}
+		
+		System.out.println("Event was not found.");
+	}
+	
+	
 }

@@ -36,13 +36,15 @@ public class TicketManager {
     }
 
     // There is a question over what this should return. It should either return the ticket id for later find in the book, or it should return the whole ticket
-    public Ticket createTicket(Event event, TicketType ticketType, String studentName) {
+    public int createTicket(Event event, TicketType ticketType, String studentName) {
         ticketNumber++;
         // I would rather ids be strings like ticket-[number], but the requirements say they need to be ints
         int id = ticketNumber;
 
         // This will fail if Zach makes createTicket() return something else, so the return type here will have to match his return type
         return ticketBook.createTicket(id, event, ticketType, studentName);
+        
+       
     }
 
     // Similar question here about what to return
@@ -51,15 +53,17 @@ public class TicketManager {
 
         if (ticket == null) {
             // Could also throw IllegalState. Don't use optional because requirements for ticket book say it should return null
+        	
+        	System.out.println("Cannot find ticket to cancel");
             return null;
         }
 
-        if (ticket.cancel()) {
-            return ticket;
-        } else {
-            // At this point, I think that we either want to throw different errors for the two problems, or have a real return type class
-            // Otherwise, it's unclear to the caller what null means
-            return null;
+        try {
+        	ticket.cancel();
+        	return ticket;
+        } catch (Exception e) {
+        	System.out.println(e);
+        	return null;
         }
     }
 
@@ -79,4 +83,8 @@ public class TicketManager {
             return null;
         }
     }
+    
+	public void printForEvent(Event event) {
+		ticketBook.printForEvent(event);
+	}
 }
