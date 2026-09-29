@@ -45,12 +45,12 @@ public class TicketBook {
 		
 		for(int i = 0; i < this.count; i++) {
 			if(this.tickets[i].getId() == id) {
-				throw new IllegalArgumentException("Ticket ID is already in ticket book. Please input a unique id.");
+				throw new IllegalStateException("Ticket ID is already in ticket book. Please input a unique id.");
 			}
 		}
 		
 		if(this.count >= this.tickets.length) {
-			throw new IllegalArgumentException("Ticketbook is full, cannot implement any new tickets.");
+			throw new IllegalStateException("Ticketbook is full, cannot implement any new tickets.");
 		}
 		
 		Ticket newTicket = new Ticket(id, event, type, studentName);
@@ -78,14 +78,21 @@ public class TicketBook {
 	}
 	
 	public void printForEvent(Event event) {
+		boolean foundEvent = false;
+
 		for(int i=0; i < this.count; i++) {
-			if(this.tickets[i].getEvent().getName() == event.getName() && this.tickets[i].getEvent().getLocation() == event.getLocation()) {
+
+			// Events are compared by their two String fields
+			// We did not override equals() in Event, we just used Java's String's built in equals() to compare strings
+			if(this.tickets[i].getEvent().getName().equals(event.getName()) && this.tickets[i].getEvent().getLocation().equals(event.getLocation())) {
 				System.out.println(this.tickets[i].toString() + "\n");
-				return;
+				foundEvent = true;
 			}
 		}
-		
-		System.out.println("Event was not found.");
+
+		if (!(foundEvent)) {
+			System.out.println("Event was not found.");
+		}
 	}
 	
 	

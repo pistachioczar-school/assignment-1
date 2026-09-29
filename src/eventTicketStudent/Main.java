@@ -39,7 +39,7 @@ public class Main {
 		
 		ticketManager.cancelTicket(1);
 		
-		System.out.println("\nAfter cancelation ticket manager [Cancled Ticket 1]:\n ");
+		System.out.println("\nAfter cancellation ticket manager [Cancled Ticket 1]:\n ");
 		ticketBook.printAll();
 		
 		ticketManager.admitTicket(2);
@@ -54,7 +54,8 @@ public class Main {
 		
 		System.out.println("\nPrinting tickets for \"Concert\":\n");
 		ticketManager.printForEvent(concert);
-		
+
+		System.out.println("\nPrinting all tickets:\n");
 		ticketBook.printAll();
 		
 

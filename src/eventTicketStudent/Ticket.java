@@ -55,9 +55,13 @@ public class Ticket {
             throw new IllegalArgumentException("Student name cannot be null or blank");
         }
 
+        /*
+        Legacy code
         if (canceled && admitted) {
+
             throw new IllegalArgumentException("Ticket cannot be cancelled and admitted at the same time");
         }
+         */
 
         this.id = id;
         this.event = event;
@@ -73,8 +77,8 @@ public class Ticket {
     public synchronized boolean cancel() {
         if (admitted) {
         	//Zach adding a throw statement and will add try catch statement to ticket manager just to show that we know how to handle error handling for assignment.
-        	throw new IllegalArgumentException("Cannot cancel an admitted ticket");
-        
+            // oliver added changed IllegalArgument to IllegalState
+        	throw new IllegalStateException("Cannot cancel an admitted ticket");
         } else {
             if (canceled) {
                 // I am choosing to make cancel idempotent for now so I will still return true instead of throwing or returning false
@@ -90,7 +94,8 @@ public class Ticket {
     // Same thing as cancel() but with the variables swapped
     public synchronized boolean admit() {
         if (canceled) {
-            return false;
+            // oliver added made admit() throw an error like cancel()
+            throw new IllegalStateException("Cannot admit a canceled ticket");
         } else {
             if (admitted) {
                 // admit is also idempotent for now

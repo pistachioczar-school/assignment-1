@@ -42,46 +42,44 @@ public class TicketManager {
         int id = ticketNumber;
 
         // This will fail if Zach makes createTicket() return something else, so the return type here will have to match his return type
+        // Final design resolved this: returns the int id
         return ticketBook.createTicket(id, event, ticketType, studentName);
-        
-       
     }
 
     // Similar question here about what to return
+    // I'll just leave this one returning ticket because returning id would be a little bit redundant since we already call it with id - oliver
     public Ticket cancelTicket(int id) {
         Ticket ticket = ticketBook.findById(id);
 
         if (ticket == null) {
-            // Could also throw IllegalState. Don't use optional because requirements for ticket book say it should return null
-        	
         	System.out.println("Cannot find ticket to cancel");
             return null;
         }
 
         try {
         	ticket.cancel();
-        	return ticket;
-        } catch (Exception e) {
-        	System.out.println(e);
-        	return null;
+        } catch (IllegalStateException exception) {
+        	System.out.println(exception.getMessage());
         }
+
+        return ticket;
     }
 
     public Ticket admitTicket(int id) {
         Ticket ticket = ticketBook.findById(id);
 
         if (ticket == null) {
-            // Could also throw IllegalState. Don't use optional because requirements for ticket book say it should return null
+            System.out.println("Cannot find ticket to admit");
             return null;
         }
 
-        if (ticket.admit()) {
-            return ticket;
-        } else {
-            // At this point, I think that we either want to throw different errors for the two problems, or have a real return type class
-            // Otherwise, it's unclear to the caller what null means
-            return null;
+        try {
+            ticket.admit();
+        } catch (IllegalStateException exception) {
+            System.out.println(exception.getMessage());
         }
+
+        return ticket;
     }
     
 	public void printForEvent(Event event) {
